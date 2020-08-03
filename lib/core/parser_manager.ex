@@ -8,9 +8,18 @@ defmodule HTMLParsec.Core.ParserManager do
 
   defstruct [:url, :adapter, :parsers, status: :not_started, links: %{}]
 
+  def child_spec(opts) do
+    url = Keyword.fetch!(opts, :url)
+
+    %{
+      id: url,
+      start: {__MODULE__, :start_link, [opts]}
+    }
+  end
+
   def start_link(opts) do
     url = Keyword.fetch!(opts, :url)
-    name = {:via, Registry, {HTMLParsec.Core.Registry, "url", url}}
+    name = {:via, Registry, {HTMLParsec.Registry, url}}
     GenServer.start_link(__MODULE__, opts, name: name)
   end
 

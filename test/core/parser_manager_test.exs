@@ -19,14 +19,11 @@ defmodule HTMLParsec.Core.ParserManagerTest do
 
   describe "get_links/1" do
     setup do
-      registry_child_spec = {Registry, keys: :unique, name: HTMLParsec.Core.Registry}
       manager_child_spec = {ParserManager, [url: @url, adapter: @adapter, parsers: @parsers]}
-
-      start_supervised!(registry_child_spec)
-      {:ok, parser_manager: start_supervised!(manager_child_spec)}
+      {:ok, parser_manager_pid: start_supervised!(manager_child_spec)}
     end
 
-    test "returns parsed links after processing is done", %{parser_manager: pid} do
+    test "returns parsed links after processing is done", %{parser_manager_pid: pid} do
       wait_until_processing_is_done(pid)
 
       assert %{

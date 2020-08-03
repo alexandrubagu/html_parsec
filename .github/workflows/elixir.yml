@@ -38,7 +38,7 @@ jobs:
       run: |
         mix format --check-formatted
         mix test
-        mix coveralls.github --umbrella
+        mix coveralls.github
     - name: Run Code Analysis
       run: |
         MIX_ENV=dev
