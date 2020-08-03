@@ -1,4 +1,6 @@
 defmodule HTMLParsec.Web.Telemetry do
+  @moduledoc false
+
   use Supervisor
   import Telemetry.Metrics
 

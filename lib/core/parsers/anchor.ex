@@ -9,11 +9,14 @@ defmodule HTMLParsec.Core.Parsers.Anchor do
   @impl HTMLParsec.Core.Parser
   def key(), do: :anchor
 
+  @doc """
+  Assuming the html will be properly formatted (one tag per line)
+  """
   @impl HTMLParsec.Core.Parser
   def parse(string) do
     case Regex.scan(@regex, string) do
       [] -> nil
-      [[_, link]] -> link
+      [data | _] -> List.last(data)
     end
   end
 end

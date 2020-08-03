@@ -1,0 +1,17 @@
+<h2>Parser Manager</h2>
+
+<%= if @status == :processing do %> Processing... <% end %>
+<%= if @status == :done do %>
+  <div class="row">
+  <%= for {name, grouped_links} <- @links do  %>
+    <div class="column column-50">
+      <h4><b>Name:</b> <%= name %>, <b>Total links:</b> <%= Enum.count(grouped_links) %>  </h4>
+      <ul>
+        <%= for link <- grouped_links do %>
+          <li><%= link %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  </div>
+<% end %>

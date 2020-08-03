@@ -11,7 +11,7 @@ defmodule HTMLParsec.Core.Parsers.ImageTest do
     assert "link" = Image.parse(~s|<img src="link"/><p>aaaa</p>|)
     assert "link" = Image.parse(~s|<img  src="link"/> Text|)
     assert "link" = Image.parse(~s|<img target="_blank" src="link"/>|)
-    assert "link" = Image.parse(~s|<img src="link" rel="alternate">Text</a>|)
-    assert "link" = Image.parse(~s|<img target="_parent" src="link" rel="help">Text</a>|)
+    assert "link" = Image.parse(~s|<img src="link" rel="alternate" />|)
+    assert "link" = Image.parse(~s|<img target="_parent" src="link" rel="help">|)
   end
 end

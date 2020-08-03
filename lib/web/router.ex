@@ -17,7 +17,9 @@ defmodule HTMLParsec.Web.Router do
   scope "/", HTMLParsec.Web do
     pipe_through :browser
 
-    live "/", PageLive, :index
+    live "/", LiveParserManager.Index
+    live "/parser-managers/new", LiveParserManager.New
+    live "/parser-managers/:url", LiveParserManager.Show
   end
 
   # Other scopes may use custom stacks.

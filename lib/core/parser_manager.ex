@@ -6,7 +6,7 @@ defmodule HTMLParsec.Core.ParserManager do
 
   @timer :timer.seconds(1)
 
-  defstruct [:url, :adapter, :parsers, status: :not_started, links: %{}]
+  defstruct [:url, :adapter, :parsers, :status, links: %{}]
 
   def child_spec(opts) do
     url = Keyword.fetch!(opts, :url)
@@ -24,11 +24,13 @@ defmodule HTMLParsec.Core.ParserManager do
   end
 
   def init(opts) do
-    state = %__MODULE__{
-      url: Keyword.fetch!(opts, :url),
-      adapter: Keyword.fetch!(opts, :adapter),
-      parsers: Keyword.fetch!(opts, :parsers)
-    }
+    state =
+      %__MODULE__{
+        url: Keyword.fetch!(opts, :url),
+        adapter: Keyword.fetch!(opts, :adapter),
+        parsers: Keyword.fetch!(opts, :parsers)
+      }
+      |> mark_as_processing()
 
     Process.send_after(self(), :process_url, @timer)
 
@@ -44,7 +46,6 @@ defmodule HTMLParsec.Core.ParserManager do
   def handle_info(:process_url, state) do
     state =
       state
-      |> mark_as_processing()
       |> extract_links()
       |> summarize_links(state)
       |> mark_as_done()
@@ -57,11 +58,11 @@ defmodule HTMLParsec.Core.ParserManager do
   defp summarize_links(stream, state) do
     Enum.reduce_while(stream, state, fn
       nil, acc -> {:halt, acc}
-      data, acc -> {:cont, group_links_into_state(data, acc)}
+      data, acc -> {:cont, group_links_into_state_and_emit_events(data, acc)}
     end)
   end
 
-  defp group_links_into_state(data, %{links: links} = state) do
+  defp group_links_into_state_and_emit_events(data, %{links: links} = state) do
     new_links =
       Enum.reduce(data, links, fn
         {_parser_key, nil}, acc ->
@@ -75,6 +76,16 @@ defmodule HTMLParsec.Core.ParserManager do
     %{state | links: new_links}
   end
 
-  defp mark_as_processing(state), do: %{state | status: :processing}
-  defp mark_as_done(state), do: %{state | status: :done}
+  defp mark_as_processing(state), do: %{state | status: :processing} |> notify_subscribers()
+  defp mark_as_done(state), do: %{state | status: :done} |> notify_subscribers
+
+  defp notify_subscribers(state) do
+    Phoenix.PubSub.broadcast(
+      HTMLParsec.PubSub,
+      "url:#{state.url}",
+      {:parser_manager_status_update, state.status}
+    )
+
+    state
+  end
 end

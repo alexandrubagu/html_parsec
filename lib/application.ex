@@ -30,7 +30,7 @@ defmodule HTMLParsec.Application do
   end
 
   def start_child(url) do
-    spec = {HTMLParsec.Core.ParserManager, url: url, adapter: @adapter, parsers: @parsers}
-    DynamicSupervisor.start_child(__MODULE__, spec)
+    spec = {HTMLParsec.Core.ParserManager, [url: url, adapter: @adapter, parsers: @parsers]}
+    DynamicSupervisor.start_child(HTMLParsec.DynamicSupervisor, spec)
   end
 end

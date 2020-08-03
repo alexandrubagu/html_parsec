@@ -50,8 +50,12 @@ defmodule HTMLParsec.CoreTest do
       {:ok, parser_manager_pid: pid}
     end
 
-    test "returns a list of active parser managers", %{parser_manager_pid: pid} do
+    test "returns the pid of parser managers for a given url", %{parser_manager_pid: pid} do
       assert pid == Core.get_pid(@anchors_url)
+    end
+
+    test "returns a list of active parser managers" do
+      refute Core.get_pid("unknown_url")
     end
   end
 end

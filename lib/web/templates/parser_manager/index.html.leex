@@ -1,0 +1,21 @@
+<h2>Active Parser Managers</h2>
+<div class="float-right"><%= link "New", class: "button", to: Routes.live_path(@socket, LiveParserManager.New) %> </div>
+
+<table >
+  <thead>
+    <tr>
+      <th>No.</th>
+      <th>URL</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+  <%= for {url, index} <- Enum.with_index(@urls, 1) do %>
+      <tr>
+        <td><%= index %></td>
+        <td><%= url %></td>
+        <td><%= link "Show", to: Routes.live_path(@socket, LiveParserManager.Show, encode(url)) %></td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>

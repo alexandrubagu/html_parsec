@@ -2,12 +2,21 @@ defmodule HTMLParsec.Core do
   @moduledoc false
 
   alias HTMLParsec.Application
+  alias HTMLParsec.Core.ParserManager
 
+  @topic "url"
   @match_pattern {:"$1", :"$2", :_}
   @empty_guards []
   @body [{{:"$1", :"$2"}}]
 
-  def fetch(url), do: Application.start_child(url)
+  def subscribe(), do: Phoenix.PubSub.subscribe(HTMLParsec.PubSub, @topic)
+  def subscribe(url), do: Phoenix.PubSub.subscribe(HTMLParsec.PubSub, "#{@topic}:#{url}")
+
+  def fetch(url) do
+    url
+    |> Application.start_child()
+    |> notify_subscribers(url)
+  end
 
   def get_urls() do
     HTMLParsec.Registry
@@ -21,4 +30,14 @@ defmodule HTMLParsec.Core do
     |> Enum.map(fn {_url, pid} -> pid end)
     |> List.first()
   end
+
+  def get_links(pid), do: ParserManager.get_links(pid)
+  def get_status(pid), do: ParserManager.get_status(pid)
+
+  defp notify_subscribers({:ok, _pid}, url) do
+    Phoenix.PubSub.broadcast(HTMLParsec.PubSub, @topic, {:parser_manager_created, url})
+    {:ok, url}
+  end
+
+  defp notify_subscribers({:error, reason}, _event), do: {:error, reason}
 end

@@ -1,4 +1,10 @@
 # HTMLParsec
+[![Elixir CI](https://github.com/alexandrubagu/html_parsec/workflows/Elixir%20CI/badge.svg?branch=master)](https://github.com/alexandrubagu/html_parsec/actions) [![Coverage Status](https://coveralls.io/repos/github/alexandrubagu/html_parsec/badge.svg?branch=master)](https://coveralls.io/github/alexandrubagu/html_parsec?branch=master)
+
+### Extracts links from anchors and images from a webpage without blocking the server
+
+[![Watch the video](https://raw.githubusercontent.com/alexandrubagu/html_parsec/master/demo.gif)](https://www.youtube.com/watch?v=pFUOXO6mODM)
+
 
 To start your Phoenix server:
 
@@ -6,5 +12,4 @@ To start your Phoenix server:
   * Install Node.js dependencies with `npm install` inside the `assets` directory
   * Start Phoenix endpoint with `mix phx.server`
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
