@@ -41,7 +41,7 @@ defmodule HTMLParsec.MixProject do
     [
       {:phoenix, "~> 1.5.4"},
       {:phoenix_live_view, "~> 0.13.0"},
-      {:floki, ">= 0.0.0", only: :test},
+      {:floki, "~> 0.27"},
       {:phoenix_html, "~> 2.11"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:telemetry_metrics, "~> 0.4"},

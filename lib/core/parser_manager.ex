@@ -57,20 +57,20 @@ defmodule HTMLParsec.Core.ParserManager do
 
   defp summarize_links(stream, state) do
     Enum.reduce_while(stream, state, fn
-      nil, acc -> {:halt, acc}
-      data, acc -> {:cont, group_links_into_state_and_emit_events(data, acc)}
+      [], acc -> {:halt, acc}
+      data, acc -> {:cont, group_links_by_parser_key(data, acc)}
     end)
   end
 
-  defp group_links_into_state_and_emit_events(data, %{links: links} = state) do
+  defp group_links_by_parser_key(data, %{links: links} = state) do
     new_links =
       Enum.reduce(data, links, fn
-        {_parser_key, nil}, acc ->
+        {_parser_key, []}, acc ->
           acc
 
-        {parser_key, value}, acc ->
-          previous_links = Map.get(acc, parser_key) || [value]
-          Map.update(acc, parser_key, previous_links, &[value | &1])
+        {parser_key, links}, acc ->
+          previous_links = Map.get(acc, parser_key) || links
+          Map.update(acc, parser_key, previous_links, &(&1 ++ links))
       end)
 
     %{state | links: new_links}

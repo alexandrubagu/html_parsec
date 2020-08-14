@@ -22,17 +22,11 @@ defmodule HTMLParsec.Core.HTTPClientAdapters.Hackney do
 
   defp next_fn(ref) do
     case :hackney.stream_body(ref) do
-      {:ok, body} -> {format_body(body), ref}
+      {:ok, fragment} -> {Floki.parse_fragment!(fragment), ref}
       :done -> {:halt, ref}
       {:error, _} -> {:halt, ref}
     end
   end
 
   defp stop_fn(ref), do: :hackney.stop_async(ref)
-
-  defp format_body(body) do
-    body
-    |> String.split("\n")
-    |> Enum.reject(&(&1 == ""))
-  end
 end

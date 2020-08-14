@@ -4,14 +4,20 @@ defmodule HTMLParsec.Core.Parsers.ImageTest do
   alias HTMLParsec.Core.Parsers.Image
 
   test "returns source image links" do
-    assert nil == Image.parse("")
-    assert nil == Image.parse("<img/>")
-    assert "link" = Image.parse(~s|<img src="link"/>|)
-    assert "link" = Image.parse(~s|<p>text</p><img src="link"/>|)
-    assert "link" = Image.parse(~s|<img src="link"/><p>aaaa</p>|)
-    assert "link" = Image.parse(~s|<img  src="link"/> Text|)
-    assert "link" = Image.parse(~s|<img target="_blank" src="link"/>|)
-    assert "link" = Image.parse(~s|<img src="link" rel="alternate" />|)
-    assert "link" = Image.parse(~s|<img target="_parent" src="link" rel="help">|)
+    assert [] == parse_image("")
+    assert [] == parse_image("<img/>")
+    assert ["link"] = parse_image(~s|<img src="link"/>|)
+    assert ["link"] = parse_image(~s|<p>text</p><img src="link"/>|)
+    assert ["link"] = parse_image(~s|<img src="link"/><p>aaaa</p>|)
+    assert ["link"] = parse_image(~s|<img  src="link"/> Text|)
+    assert ["link"] = parse_image(~s|<img target="_blank" src="link"/>|)
+    assert ["link"] = parse_image(~s|<img src="link" rel="alternate" />|)
+    assert ["link"] = parse_image(~s|<img target="_parent" src="link" rel="help">|)
+  end
+
+  defp parse_image(content) do
+    content
+    |> Floki.parse_fragment!()
+    |> Image.parse()
   end
 end

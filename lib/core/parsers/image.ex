@@ -1,22 +1,11 @@
 defmodule HTMLParsec.Core.Parsers.Image do
-  @moduledoc """
-  This could be done with Flock (https://github.com/philss/floki)
-  """
+  @moduledoc false
+
   @behaviour HTMLParsec.Core.Parser
 
-  @regex ~r/<img\s+(?:[^>]*?\s+)?src="([^"]*)"/
+  @impl HTMLParsec.Core.Parser
+  def key(), do: :images
 
   @impl HTMLParsec.Core.Parser
-  def key(), do: :image
-
-  @doc """
-  Assuming the html will be properly formatted (one tag per line)
-  """
-  @impl HTMLParsec.Core.Parser
-  def parse(string) do
-    case Regex.scan(@regex, string) do
-      [] -> nil
-      [[_, link]] -> link
-    end
-  end
+  def parse(html_tree), do: Floki.attribute(html_tree, "img", "src")
 end

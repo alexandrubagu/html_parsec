@@ -13,7 +13,7 @@ defmodule HTMLParsec.Core.HTTPClientAdapters.HackneyTest do
 
   describe "fetch/1" do
     test "returns a stream with values separated by line" do
-      assert ["Hello", "world!"] == fetch("http://localhost:4545")
+      assert ["Hello\nworld!"] == fetch("http://localhost:4545")
     end
 
     test "returns an error if something went wrong" do

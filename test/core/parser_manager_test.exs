@@ -27,8 +27,8 @@ defmodule HTMLParsec.Core.ParserManagerTest do
       wait_until_processing_is_done(pid)
 
       assert %{
-               anchor: ["anchor_link2", "anchor_link1"],
-               image: ["image_link2.gif", "image_link1.gif"]
+               anchors: ["anchor_link1", "anchor_link2"],
+               images: ["image_link1.gif", "image_link2.gif"]
              } == ParserManager.get_links(pid)
     end
   end

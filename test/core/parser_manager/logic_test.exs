@@ -19,23 +19,22 @@ defmodule HTMLParsec.Core.ParserManager.LogicTest do
   describe "extract_links/3" do
     test "extracts images" do
       assert [
-               %{image: "link1"},
-               %{image: "link2"}
+               %{images: ["link1"]},
+               %{images: ["link2"]}
              ] = extract_links("#{@base_url}/images", _adapter = Hackney, _parsers = [Image])
     end
 
     test "extracts anchors" do
       assert [
-               %{anchor: "link1"},
-               %{anchor: "link2"}
+               %{anchors: ["link1"]},
+               %{anchors: ["link2"]}
              ] = extract_links("#{@base_url}/anchors", _adapter = Hackney, _parsers = [Anchor])
     end
 
     test "extracts images and anchors" do
       assert [
-               %{anchor: "anchor_link1", image: "image_link1.gif"},
-               %{anchor: "anchor_link2", image: nil},
-               %{anchor: nil, image: "image_link2.gif"}
+               %{anchors: ["anchor_link1"], images: ["image_link1.gif"]},
+               %{anchors: ["anchor_link2"], images: ["image_link2.gif"]}
              ] = extract_links("#{@base_url}/combined", _adapter = Hackney, [Anchor, Image])
     end
   end
